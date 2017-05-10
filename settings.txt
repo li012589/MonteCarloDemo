@@ -1,34 +1,8 @@
-// No. of non-continue variables
-nonContinue = {A:1;B:2;AB:3;O:0;male:0;female:1}
-// Path to data xls file
-dataPath = './data21_bak.xls'
-// Tree no. in each forest
-numTree = 20
-// Forest value of each forest, one less feature decress one valForest
-// Big Forest with little sample ???? record dropped samples???
-totalVote = 10000
-missValueBias = 0.9
-// Minimum features
-minFeature = 0.5
-// Maxium number of threadings
-maxThreading = 3
-// about RF. See http://t.cn/R6btgcV (sklearn document)
-n_estimators = 1000
-criterion = 'mse'
-max_depth = 'None'
-min_samples_split = 2
-min_samples_leaf = 1
-min_weight_fraction_leaf = 0
-max_features = 0.8
-max_leaf_nodes = 'None'
-min_impurity_split = 1e-7
-bootstrap = 'True'
-oob_score = 'False'
-n_jobs = 1
-random_state = 'None'
-verbose = 0
-warm_start = 'False'
-// about train test dataset dividing
-TEST_SIZE = 0.33
-RANDOM_STATE = 42
-STRATIFY = 'None'
+// Maxium threading
+thread = 2
+// Temperture (use [] if in range)
+temperture = 1
+// Size (use [] if not square)
+size = 10
+// Init method (-1 for random; others for homogeneous as specialized)
+init = 1
