@@ -9,4 +9,4 @@ init = -1
 // Maxium iterations
 maxIter = 1000
 // define the Hamiltonian
-hamiltonian = [j,b]
+hamiltonian = [1,1]

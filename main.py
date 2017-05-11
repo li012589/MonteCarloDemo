@@ -37,7 +37,9 @@ def main():
     settings = Settings(settingPath)
     fieldSize = settings.getValue('size')
     field = createField(fieldSize,settings.getValue('init'))
-    print field
+    Hami = settings.getValue('hamiltonian')
+    initH = calculateH(field,Hami[1],Hami[0])
+    
 
 if __name__ == '__main__':
     main()
