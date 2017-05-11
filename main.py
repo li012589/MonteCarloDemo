@@ -16,12 +16,15 @@ def createField(size, method):
         return tmp
 
 def createChange(size,times):
-    i = []
-    j = []
+    changes = []
     for _ in range(times):
-        i.append(randint(0,size[0]-1))
-        j.append(randint(0,size[1]-1))
-    return i,j
+        i=randint(0,size[0]-1)
+        j=randint(0,size[1]-1)
+        if (i,j) in changes:
+            changes.remove((i,j))
+        else:
+            changes.append((i,j))
+    return changes
 
 def calculateH(image, B, J):
     Hj = 0.0
@@ -41,13 +44,10 @@ def calculateH(image, B, J):
     H = Hb + Hj/2
     return H
 
-def calculateDeltaH(x,y,J,B,image):
+def calculateDeltaH(changes,J,B,image):
     deltaHb = 0.0
     deltaHj = 0.0
-    changes = []
     shape = image.shape
-    for n in range(len(x)):
-        changes.append((x[n],y[n]))
     for n in range(len(changes)):
         i = changes[n][0]
         j = changes[n][1]
@@ -72,26 +72,27 @@ def calculateDeltaH(x,y,J,B,image):
                 deltaHj += -J*-image[i,j]*image[i,j+1]+J*image[i,j]*image[i,j+1]
             else:
                 deltaHj += -J*-image[i,j]*-image[i,j+1]+J*image[i,j]*image[i,j+1]
-    print -deltaHj
-    print deltaHb
     return -deltaHj + deltaHb
 
 def main():
     settings = Settings(settingPath)
     fieldSize = settings.getValue('size')
     field = createField(fieldSize,settings.getValue('init'))
-    print field
+    #print field
     Hami = settings.getValue('hamiltonian')
     initH = calculateH(field,Hami[1],Hami[0])
     print initH
     flipTimes = settings.getValue('flipTimes')
-    #i,j = createChange(fieldSize,flipTimes)
-    i = [0,0]
-    j = [0,1]
-    for n in range(len(i)):
-        field[i[n],j[n]] = -field[i[n],j[n]]
+    changes = createChange(fieldSize,flipTimes)
+    print changes
+    #i = [0,0]
+    #j = [0,1]
+    for n in range(len(changes)):
+        i = changes[n][0]
+        j = changes[n][1]
+        field[i,j] = -field[i,j]
     print field
-    deltaH = calculateDeltaH(i,j,Hami[0],Hami[1],field)
+    deltaH = calculateDeltaH(changes,Hami[0],Hami[1],field)
     print deltaH
     print calculateH(field,Hami[1],Hami[0])
 if __name__ == '__main__':
