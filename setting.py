@@ -2,6 +2,14 @@ import re
 
 class Settings:
     _settings={}
+    @staticmethod
+    def dealString(string):
+        if '.' in string or 'e' in string:
+            return float(string)
+        elif '\'' in string:
+            return string.replace('\'','')
+        else:
+            return int(string)
     def addKey(self,key,value):
         self._settings[key]=value
     def getString(self,key):
@@ -12,12 +20,12 @@ class Settings:
         else:
             return int(self._settings[key])
     def getList(self,key):
-        return  self._settings[key].replace('[','').replace(']','').split(',')
+        return  map(Settings.dealString,self._settings[key].replace('[','').replace(']','').split(','))
     def getDict(self,key):
         dic = {}
         tmp = self._settings[key].replace('{','').replace('}','').split(';')
         for iterm in tmp:
-            dic[iterm.split(':')[0]]=iterm.split(':')[1]
+            dic[Settings.dealString(iterm.split(':')[0])]=Settings.dealString(iterm.split(':')[1])
         return dic
     def getValue(self,key):
         tmp = self._settings[key]
@@ -43,7 +51,7 @@ class Settings:
             settings = f.read()
             settings = settings.split('\n')
             for line in settings:
-                if re.search(pattern,line):
+                if re.search(pattern,line) or (len(line) == 0):
                     continue
                 line=line.split(' ')
                 self._settings[line[0]]=line[2]
