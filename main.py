@@ -1,5 +1,6 @@
 from setting import Settings
 import numpy as np
+import math
 from random import randint
 
 settingPath = './settings.txt'
@@ -26,7 +27,7 @@ def createChange(size,times):
             changes.append((i,j))
     return changes
 
-def calculateH(image, B, J):
+def calculateH(image, J, B):
     Hj = 0.0
     Hb = 0.0
     shape = image.shape
@@ -74,15 +75,24 @@ def calculateDeltaH(changes,J,B,image):
                 deltaHj += -J*-image[i,j]*-image[i,j+1]+J*image[i,j]*image[i,j+1]
     return -deltaHj + deltaHb
 
+def calculateListofDelta(flipTimes, J, B):
+    exponDeltaH = {}
+    possibileDeltaH = (n for n in range(4*flipTimes))
+    for delta in possibileDeltaH:
+        exponDeltaH[delta] = math.exp(delta)
+    return exponDeltaH
+
 def main():
     settings = Settings(settingPath)
     fieldSize = settings.getValue('size')
     field = createField(fieldSize,settings.getValue('init'))
     #print field
     Hami = settings.getValue('hamiltonian')
-    initH = calculateH(field,Hami[1],Hami[0])
+    initH = calculateH(field,Hami[0],Hami[1])
     print initH
     flipTimes = settings.getValue('flipTimes')
+    exponDeltaH = calculateListofDelta(flipTimes,Hami[0],Hami[1])
+    print exponDeltaH
     changes = createChange(fieldSize,flipTimes)
     print changes
     #i = [0,0]
@@ -94,6 +104,8 @@ def main():
     print field
     deltaH = calculateDeltaH(changes,Hami[0],Hami[1],field)
     print deltaH
-    print calculateH(field,Hami[1],Hami[0])
+    print calculateH(field,Hami[0],Hami[1])
+    if deltaH in exponDeltaH:
+        print exponDeltaH[deltaH]
 if __name__ == '__main__':
     main()
