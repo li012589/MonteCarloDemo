@@ -2,7 +2,11 @@
 thread = 2
 // Temperture (use [] if in range)
 temperture = 1
-// Size (use [] if not square)
-size = 10
+// Size 
+size = [10,10]
 // Init method (-1 for random; others for homogeneous as specialized)
-init = 1
+init = -1
+// Maxium iterations
+maxIter = 1000
+// define the Hamiltonian
+hamiltonian = [j,b]
