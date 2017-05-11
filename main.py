@@ -15,19 +15,21 @@ def createField(size, method):
         return tmp
 
 def calculateH(image, b, j):
-    H = 0
+    Hj = 0.0
+    Hb = 0.0
     shape = image.shape
     for i in range(shape[0]):
         for j in range(shape[1]):
-            H += -b*image[i,j]
-            if i-1>0 and j-1>0:
-                H += -j*image[i,j]*image[i-1,j-1]
-            if i-1>0 and j+1<shape[1]:
-                H += -j*image[i,j]*image[i-1,j+1]
-            if i+1<shape[0] and j-1>0:
-                H += -j*image[i,j]*image[i+1,j-1]
-            if i+1<shape[0] and j+1<shape[1]:
-                H += -j*image[i,j]*image[i+1,j+1]
+            Hb += -b*image[i,j]
+            if i-1>=0:
+                Hj += -j*image[i,j]*image[i-1,j]
+            if i+1<shape[0]:
+                Hj += -j*image[i,j]*image[i+1,j]
+            if j-1>=0:
+                Hj += -j*image[i,j]*image[i,j-1]
+            if j+1<shape[1]:
+                Hj += -j*image[i,j]*image[i,j+1]
+    H = Hb + Hj/2
     return H
 
 def calculateDeltaH():
