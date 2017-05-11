@@ -87,6 +87,22 @@ def calculateListofDelta(flipTimes, J, B, T):
         exponDeltaH[delta] = math.exp(-delta/T)
     return exponDeltaH
 
+def changeField(changes,image):
+    for n in range(len(changes)):
+        i = changes[n][0]
+        j = changes[n][1]
+        image[i,j] = -image[i,j]
+    return image
+
+class exponDeltaH:
+    def __init__(self,d):
+        self.dic = d
+    def calculate(self,delta,T):
+        if delta in self.dic:
+            return self.dic[delta]
+        else:
+            self.dic[delta]  = math.exp(-delta/T)
+            return self.dic[delta]
 def main():
     settings = Settings(settingPath)
     fieldSize = settings.getValue('size')
@@ -95,23 +111,19 @@ def main():
     #print field
     Hami = settings.getValue('hamiltonian')
     initH = calculateH(field,Hami[0],Hami[1])
-    print initH
+    #print initH
     flipTimes = settings.getValue('flipTimes')
-    exponDeltaH = calculateListofDelta(flipTimes,Hami[0],Hami[1],t)
-    changes = createChange(fieldSize,flipTimes)
-    print changes
-    #i = [0,0]
-    #j = [0,1]
-    for n in range(len(changes)):
-        i = changes[n][0]
-        j = changes[n][1]
-        field[i,j] = -field[i,j]
-    print field
-    deltaH = calculateDeltaH(changes,Hami[0],Hami[1],field)
-    print deltaH
-    print calculateH(field,Hami[0],Hami[1])
-    if deltaH in exponDeltaH:
-        print exponDeltaH[deltaH]
+    exponDeltaHList = exponDeltaH({})
+    for n in range(100):
+        changes = createChange(fieldSize,flipTimes)
+        #print changes
+        field = changeField(changes,field)
+        #print field
+        deltaH = calculateDeltaH(changes,Hami[0],Hami[1],field)
+        #print deltaH
+        exponDeltaHList.calculate(deltaH,t)
+    #print calculateH(field,Hami[0],Hami[1])
+
 
 if __name__ == '__main__':
     main()
