@@ -1,5 +1,6 @@
 from setting import Settings
 import numpy as np
+from random import randint
 
 settingPath = './settings.txt'
 
@@ -13,6 +14,14 @@ def createField(size, method):
         tmp[tmp<0.5] = -1
         tmp[tmp>=0.5] = 1
         return tmp
+
+def createChange(size,times):
+    i = []
+    j = []
+    for _ in range(times):
+        i.append(randint(0,size[0]-1))
+        j.append(randint(0,size[1]-1))
+    return i,j
 
 def calculateH(image, b, j):
     Hj = 0.0
@@ -41,7 +50,8 @@ def main():
     field = createField(fieldSize,settings.getValue('init'))
     Hami = settings.getValue('hamiltonian')
     initH = calculateH(field,Hami[1],Hami[0])
+    flipTimes = settings.getValue('flipTimes')
+    #i,j = createChange(fieldSize,flipTimes)
     
-
 if __name__ == '__main__':
     main()

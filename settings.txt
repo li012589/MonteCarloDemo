@@ -6,6 +6,8 @@ temperture = 1
 size = [3,3]
 // Init method (-1 for random; others for homogeneous as specialized)
 init = 1
+// How many spins are fliped a time
+flipTimes = 3
 // Maxium iterations
 maxIter = 1000
 // define the Hamiltonian
