@@ -1,7 +1,9 @@
 from setting import Settings
 import numpy as np
 import math
+import random
 from random import randint
+import matplotlib.pyplot as plt
 
 settingPath = './settings.txt'
 
@@ -103,25 +105,46 @@ class exponDeltaH:
         else:
             self.dic[delta]  = math.exp(-delta/T)
             return self.dic[delta]
+
+def Metropolis(iteration,field,fieldSize,flipTimes,Hami,t):
+    exponDeltaHList = exponDeltaH({})
+    for n in range(iteration):
+        changes = createChange(fieldSize,flipTimes)
+        #print changes
+        newField = changeField(changes,field)
+        #print field
+        deltaH = calculateDeltaH(changes,Hami[0],Hami[1],field)
+        #print deltaH
+        if deltaH <= 0:
+            field = newField
+            print 'Accepted!'
+        else:
+            if random.random() <= exponDeltaHList.calculate(deltaH,t):
+                print 'Accepted with high H!'
+                field = newField
+            else:
+                print 'Rejected'
+                pass
+    return field
+
 def main():
     settings = Settings(settingPath)
     fieldSize = settings.getValue('size')
     field = createField(fieldSize,settings.getValue('init'))
     t = settings.getValue('temperture')
+    plt.matshow(field)
     #print field
     Hami = settings.getValue('hamiltonian')
     initH = calculateH(field,Hami[0],Hami[1])
     #print initH
     flipTimes = settings.getValue('flipTimes')
-    exponDeltaHList = exponDeltaH({})
-    for n in range(100):
-        changes = createChange(fieldSize,flipTimes)
-        #print changes
-        field = changeField(changes,field)
-        #print field
-        deltaH = calculateDeltaH(changes,Hami[0],Hami[1],field)
-        #print deltaH
-        exponDeltaHList.calculate(deltaH,t)
+    random.seed(settings.getValue('randomSeed'))
+    maxTter = settings.getValue('maxIter')
+
+    field = Metropolis(maxTter,field,fieldSize,flipTimes,Hami,t)
+
+    plt.matshow(field)
+    plt.show()
     #print calculateH(field,Hami[0],Hami[1])
 
 

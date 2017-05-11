@@ -1,9 +1,11 @@
 // Maxium threading
 thread = 2
+// Seed of the random function
+randomSeed = 'None'
 // Temperture (use [] if in range)
 temperture = 1
 // Size 
-size = [3,3]
+size = [10,10]
 // Init method (-1 for random; others for homogeneous as specialized)
 init = 1
 // How many spins are fliped a time
