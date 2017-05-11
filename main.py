@@ -75,23 +75,29 @@ def calculateDeltaH(changes,J,B,image):
                 deltaHj += -J*-image[i,j]*-image[i,j+1]+J*image[i,j]*image[i,j+1]
     return -deltaHj + deltaHb
 
-def calculateListofDelta(flipTimes, J, B):
+def calculateListofDelta(flipTimes, J, B, T):
     exponDeltaH = {}
-    possibileDeltaH = (n for n in range(4*flipTimes))
+    possibileDeltaH = []
+    maxJ = 2*4*flipTimes
+    maxB = 2*flipTimes
+    for j in range(maxJ+1):
+        for b in range(maxB+1):
+            possibileDeltaH.append(j*J+b*B)
     for delta in possibileDeltaH:
-        exponDeltaH[delta] = math.exp(delta)
+        exponDeltaH[delta] = math.exp(delta/T)
     return exponDeltaH
 
 def main():
     settings = Settings(settingPath)
     fieldSize = settings.getValue('size')
     field = createField(fieldSize,settings.getValue('init'))
+    t = settings.getValue('temperture')
     #print field
     Hami = settings.getValue('hamiltonian')
     initH = calculateH(field,Hami[0],Hami[1])
     print initH
     flipTimes = settings.getValue('flipTimes')
-    exponDeltaH = calculateListofDelta(flipTimes,Hami[0],Hami[1])
+    exponDeltaH = calculateListofDelta(flipTimes,Hami[0],Hami[1],t)
     print exponDeltaH
     changes = createChange(fieldSize,flipTimes)
     print changes
