@@ -11,4 +11,4 @@ flipTimes = 3
 // Maxium iterations
 maxIter = 1000
 // define the Hamiltonian (j,b)
-hamiltonian = [1,1]
+hamiltonian = [0.5,0.6]

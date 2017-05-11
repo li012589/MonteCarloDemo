@@ -84,7 +84,7 @@ def calculateListofDelta(flipTimes, J, B, T):
         for b in range(maxB+1):
             possibileDeltaH.append(j*J+b*B)
     for delta in possibileDeltaH:
-        exponDeltaH[delta] = math.exp(delta/T)
+        exponDeltaH[delta] = math.exp(-delta/T)
     return exponDeltaH
 
 def main():
@@ -98,7 +98,6 @@ def main():
     print initH
     flipTimes = settings.getValue('flipTimes')
     exponDeltaH = calculateListofDelta(flipTimes,Hami[0],Hami[1],t)
-    print exponDeltaH
     changes = createChange(fieldSize,flipTimes)
     print changes
     #i = [0,0]
@@ -113,5 +112,6 @@ def main():
     print calculateH(field,Hami[0],Hami[1])
     if deltaH in exponDeltaH:
         print exponDeltaH[deltaH]
+
 if __name__ == '__main__':
     main()
