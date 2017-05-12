@@ -1,3 +1,5 @@
+import math
+
 class exponDeltaH:
     def __init__(self,d):
         self.dic = d

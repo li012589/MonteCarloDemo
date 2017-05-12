@@ -5,7 +5,7 @@ randomSeed = 'None'
 // Temperture (use [] if in range)
 temperture = 1
 // Size 
-size = [10,10]
+size = [3,3]
 // Init method (-1 for random; others for homogeneous as specialized)
 init = 1
 // How many spins are fliped a time

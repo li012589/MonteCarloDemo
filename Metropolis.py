@@ -5,7 +5,7 @@ import random
 from random import randint
 import matplotlib.pyplot as plt
 from exponDeltaH import exponDeltaH
-from field import Field
+from general import createField,calculateH
 
 class Metropolis:
     def __init__(self,settingPath):
@@ -32,10 +32,11 @@ class Metropolis:
                 self.changes.append((i,j))
         return self.changes
     def changeField(self):
+        self.newfield = np.copy(self.field)
         for n in range(len(self.changes)):
             i = self.changes[n][0]
             j = self.changes[n][1]
-            self.newfield[i,j] = -self.field[i,j]
+            self.newfield[i,j] = -self.newfield[i,j]
         return self.newfield
     def showField(self):
         plt.matshow(self.field)
@@ -75,27 +76,32 @@ class Metropolis:
     def run(self,times):
         for n in range(times):
             self.createChange()
+            #print self.field
             #print changes
             self.changeField()
             #print field
-            print self.calculateDeltaH()
+            self.calculateDeltaH()
+            #print self.field
             #print deltaH
             if self.deltaH <= 0:
-                field = newField
+                self.field = self.newfield
                 print 'Accepted!'
+                print self.deltaH
             else:
-                if random.random() <= self.exponDeltaHList.calculate(deltaH,t):
+                if random.random() <= self.exponDeltaHList.calculate(self.deltaH,self.t):
                     print 'Accepted with high H!'
-                    field = newField
+                    self.field = self.newfield
+                    print self.deltaH
                 else:
-                    print 'Rejected'
+                    #print 'Rejected'
+                    pass
         return self.field
 
 if __name__ == '__main__':
     # Test if works
     m = Metropolis('./settings.txt')
-    f = Field(m.fieldSize,m.fieldInitMethod)
+    f = createField(m.fieldSize,m.fieldInitMethod)
     m.init(f)
-    print m.field.Hamiltonian(m.Hami[0],m.Hami[1])
+    print calculateH(m.field,m.Hami[0],m.Hami[1])
     m.run(10)
-    print m.field.Hamiltonian(m.Hami[0],m.Hami[1])
+    print calculateH(m.field,m.Hami[0],m.Hami[1])
