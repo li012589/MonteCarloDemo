@@ -71,7 +71,7 @@ class Metropolis:
                     deltaHj += -J*-self.field[i,j]*self.field[i,j+1]+J*self.field[i,j]*self.field[i,j+1]
                 else:
                     deltaHj += -J*-self.field[i,j]*-self.field[i,j+1]+J*self.field[i,j]*self.field[i,j+1]
-        self.deltaH = -deltaHj + deltaHb
+        self.deltaH = -(-deltaHj + deltaHb)
         return self.deltaH
     def run(self,times):
         for n in range(times):
@@ -102,6 +102,8 @@ if __name__ == '__main__':
     m = Metropolis('./settings.txt')
     f = createField(m.fieldSize,m.fieldInitMethod)
     m.init(f)
+    m.showField()
     print calculateH(m.field,m.Hami[0],m.Hami[1])
     m.run(10)
     print calculateH(m.field,m.Hami[0],m.Hami[1])
+    m.showField()
