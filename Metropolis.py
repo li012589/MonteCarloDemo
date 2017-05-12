@@ -73,29 +73,31 @@ class Metropolis:
                     deltaHj += -J*-self.field[i,j]*-self.field[i,j+1]+J*self.field[i,j]*self.field[i,j+1]
         self.deltaH = -(-deltaHj + deltaHb)
         return self.deltaH
-    def run(self,times):
-        for n in range(times):
-            self.createChange()
-            #print self.field
-            #print changes
-            self.changeField()
-            #print field
-            self.calculateDeltaH()
-            #print self.field
-            #print deltaH
-            if self.deltaH <= 0:
+    def runOnce(self):
+        self.createChange()
+        #print self.field
+        #print changes
+        self.changeField()
+        #print field
+        self.calculateDeltaH()
+        #print self.field
+        #print deltaH
+        if self.deltaH <= 0:
+            self.field = self.newfield
+            print 'Accepted!'
+            print self.deltaH
+        else:
+            if random.random() <= self.exponDeltaHList.calculate(self.deltaH,self.t):
+                print 'Accepted with high H!'
                 self.field = self.newfield
-                print 'Accepted!'
                 print self.deltaH
             else:
-                if random.random() <= self.exponDeltaHList.calculate(self.deltaH,self.t):
-                    print 'Accepted with high H!'
-                    self.field = self.newfield
-                    print self.deltaH
-                else:
-                    #print 'Rejected'
-                    pass
+                #print 'Rejected'
+                pass
         return self.field
+    def run(self,times):
+        for _ in range(times):
+            self.runOnce()
 
 if __name__ == '__main__':
     # Test if works
