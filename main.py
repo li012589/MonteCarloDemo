@@ -3,7 +3,7 @@ import math
 import random
 from random import randint
 import matplotlib.pyplot as plt
-from general import createField,calculateH
+from general import createField,calculateH,calculateM
 from Metropolis import Metropolis
 
 generalSettingPath = './general_settings.txt'

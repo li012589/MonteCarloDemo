@@ -1,5 +1,7 @@
 import numpy as np
 
+def calculateM(field):
+    return np.sum(field)
 def createField(size, method):
     if method != -1:
         tmp = np.empty(tuple(size))

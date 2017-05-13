@@ -5,7 +5,7 @@ import random
 from random import randint
 import matplotlib.pyplot as plt
 from exponDeltaH import exponDeltaH
-from general import createField,calculateH
+from general import createField,calculateH,calculateM
 
 class Metropolis:
     def __init__(self,settingPath):
@@ -18,7 +18,10 @@ class Metropolis:
          self.flipTimes = self.settings.getValue('flipTimes')
          self.fieldInitMethod = self.settings.getValue('init')
          random.seed(self.settings.getValue('randomSeed'))
-         self.changeHistory=[]
+         self.applyFunc = {}
+         self.changeHistory = []
+         self.deltaHHistory = []
+         self.deltaMHistory = []
     def init(self,field):
         self.field = field
         self.startField = field
@@ -78,6 +81,13 @@ class Metropolis:
                     deltaHj += -J*-self.field[i,j]*-self.field[i,j+1]+J*self.field[i,j]*self.field[i,j+1]
         self.deltaH = -(-deltaHj + deltaHb)
         return self.deltaH
+    def calculateDeltaM(self):
+        self.deltaM = 0.0
+        for n in range(len(self.changes)):
+            i = self.changes[n][0]
+            j = self.changes[n][1]
+            self.deltaM += -2*self.field[i,j]
+        return self.deltaM
     def runOnce(self):
         self.createChange()
         #print self.field
@@ -85,22 +95,29 @@ class Metropolis:
         self.changeField()
         #print field
         self.calculateDeltaH()
+        self.calculateDeltaM()
         #print self.field
         #print deltaH
         if self.deltaH <= 0:
             self.field = self.newfield
             self.changeHistory.append(self.changes)
             #print 'Accepted!'
-            #print self.deltaH
+            self.deltaHHistory.append(self.deltaH)
+            self.deltaMHistory.append(self.deltaM)
+            print self.deltaM
         else:
             if random.random() <= self.exponDeltaHList.calculate(self.deltaH,self.t):
                 #print 'Accepted with high H!'
                 self.field = self.newfield
                 self.changeHistory.append(self.changes)
-                #print self.deltaH
+                self.deltaHHistory.append(self.deltaH)
+                self.deltaMHistory.append(self.deltaM)
+                print self.deltaM
             else:
                 #print 'Rejected'
-                pass
+                self.changeHistory.append([])
+                self.deltaHHistory.append(0)
+                self.deltaMHistory.append(0)
         return self.field
     def run(self,times):
         for _ in range(times):
@@ -113,11 +130,13 @@ class Metropolis:
 
 if __name__ == '__main__':
     # Test if works
-    m = Metropolis('./settings.txt')
+    m = Metropolis('./Metropolis_settings.txt')
     f = createField(m.fieldSize,m.fieldInitMethod)
     m.init(f)
-    m.showField()
-    print calculateH(m.field,m.Hami[0],m.Hami[1])
+#    m.showField()
+    #print calculateH(m.field,m.Hami[0],m.Hami[1])
+    print calculateM(m.field)
     m.run(10)
-    print calculateH(m.field,m.Hami[0],m.Hami[1])
-    m.showField()
+    #print calculateH(m.field,m.Hami[0],m.Hami[1])
+    print calculateM(m.field)
+    #m.showField()
