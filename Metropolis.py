@@ -104,7 +104,7 @@ class Metropolis:
             #print 'Accepted!'
             self.deltaHHistory.append(self.deltaH)
             self.deltaMHistory.append(self.deltaM)
-            print self.deltaH
+            #print self.deltaH
         else:
             if random.random() <= self.exponDeltaHList.calculate(self.deltaH,self.t):
                 #print 'Accepted with high H!'
@@ -112,9 +112,9 @@ class Metropolis:
                 self.changeHistory.append(self.changes)
                 self.deltaHHistory.append(self.deltaH)
                 self.deltaMHistory.append(self.deltaM)
-                print self.deltaH
+                #print self.deltaH
             else:
-                print 'Rejected'
+                #print 'Rejected'
                 self.changeHistory.append([])
                 self.deltaHHistory.append(0)
                 self.deltaMHistory.append(0)

@@ -3,7 +3,7 @@ thread = 2
 // Seed of the random function
 randomSeed = 'None'
 // Temperture (use [] if in range)
-temperture = 50
+temperture = 5
 // Size 
 size = [100,100]
 // Init method (-1 for random; others for homogeneous as specialized)

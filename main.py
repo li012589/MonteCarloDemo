@@ -13,13 +13,15 @@ WofflSettingPath = './Woffl_settings.txt'
 def main():
     m = Metropolis(MetroSettingPath)
     f = createField(m.fieldSize,m.fieldInitMethod)
-    plt.matshow(f)
+#    plt.matshow(f)
     m.init(f)
-    print calculateH(m.field,m.Hami[0],m.Hami[1])
+    initH = calculateH(m.field,m.Hami[0],m.Hami[1])
+    initM = calculateM(m.field)
     m.run(m.maxIter)
-    print calculateH(m.field,m.Hami[0],m.Hami[1])
-    plt.matshow(m.field)
+    #plt.plot(m.HHistory(initH))
+    plt.plot(m.MHistory(initM))
     plt.show()
+
 
 if __name__ == '__main__':
     main()
