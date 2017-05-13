@@ -6,16 +6,20 @@ import matplotlib.pyplot as plt
 from general import createField,calculateH
 from Metropolis import Metropolis
 
-Metro_settingPath = './Metropolis_settings.txt'
+generalSettingPath = './general_settings.txt'
+MetroSettingPath = './Metropolis_settings.txt'
+WofflSettingPath = './Woffl_settings.txt'
 
 def main():
-    m = Metropolis(Metro_settingPath)
+    m = Metropolis(MetroSettingPath)
     f = createField(m.fieldSize,m.fieldInitMethod)
+    plt.matshow(f)
     m.init(f)
     print calculateH(m.field,m.Hami[0],m.Hami[1])
-    m.run(10)
+    m.run(m.maxIter)
     print calculateH(m.field,m.Hami[0],m.Hami[1])
-
+    plt.matshow(m.field)
+    plt.show()
 
 if __name__ == '__main__':
     main()

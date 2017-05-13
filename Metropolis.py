@@ -13,13 +13,15 @@ class Metropolis:
          self.fieldSize = self.settings.getValue('size')
          self.t = self.settings.getValue('temperture')
          self.Hami = self.settings.getValue('hamiltonian')
-         self.maxTter = self.settings.getValue('maxIter')
+         self.maxIter = self.settings.getValue('maxIter')
          self.exponDeltaHList = exponDeltaH({})
          self.flipTimes = self.settings.getValue('flipTimes')
          self.fieldInitMethod = self.settings.getValue('init')
          random.seed(self.settings.getValue('randomSeed'))
+         self.changeHistory=[]
     def init(self,field):
         self.field = field
+        self.startField = field
         return field
     def createChange(self):
         self.changes = []
@@ -32,12 +34,15 @@ class Metropolis:
                 self.changes.append((i,j))
         return self.changes
     def changeField(self):
-        self.newfield = np.copy(self.field)
-        for n in range(len(self.changes)):
-            i = self.changes[n][0]
-            j = self.changes[n][1]
-            self.newfield[i,j] = -self.newfield[i,j]
+        self.newfield = self.changeFieldMulti(self.field,self.changes)
         return self.newfield
+    def changeFieldMulti(self,field,changes):
+        newfield = np.copy(field)
+        for n in range(len(changes)):
+            i = changes[n][0]
+            j = changes[n][1]
+            newfield[i,j] = -newfield[i,j]
+        return newfield
     def showField(self):
         plt.matshow(self.field)
         plt.show()
@@ -84,13 +89,15 @@ class Metropolis:
         #print deltaH
         if self.deltaH <= 0:
             self.field = self.newfield
-            print 'Accepted!'
-            print self.deltaH
+            self.changeHistory.append(self.changes)
+            #print 'Accepted!'
+            #print self.deltaH
         else:
             if random.random() <= self.exponDeltaHList.calculate(self.deltaH,self.t):
-                print 'Accepted with high H!'
+                #print 'Accepted with high H!'
                 self.field = self.newfield
-                print self.deltaH
+                self.changeHistory.append(self.changes)
+                #print self.deltaH
             else:
                 #print 'Rejected'
                 pass
@@ -98,6 +105,11 @@ class Metropolis:
     def run(self,times):
         for _ in range(times):
             self.runOnce()
+    def history(self,n):
+        field = np.copy(self.startField)
+        for i in n:
+            self.changeFieldMulti(field,changeHistory[i])
+        return field
 
 if __name__ == '__main__':
     # Test if works
