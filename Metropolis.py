@@ -104,7 +104,7 @@ class Metropolis:
             #print 'Accepted!'
             self.deltaHHistory.append(self.deltaH)
             self.deltaMHistory.append(self.deltaM)
-            print self.deltaM
+            print self.deltaH
         else:
             if random.random() <= self.exponDeltaHList.calculate(self.deltaH,self.t):
                 #print 'Accepted with high H!'
@@ -112,9 +112,9 @@ class Metropolis:
                 self.changeHistory.append(self.changes)
                 self.deltaHHistory.append(self.deltaH)
                 self.deltaMHistory.append(self.deltaM)
-                print self.deltaM
+                print self.deltaH
             else:
-                #print 'Rejected'
+                print 'Rejected'
                 self.changeHistory.append([])
                 self.deltaHHistory.append(0)
                 self.deltaMHistory.append(0)
@@ -122,11 +122,21 @@ class Metropolis:
     def run(self,times):
         for _ in range(times):
             self.runOnce()
-    def history(self,n):
+    def fieldHistory(self,n):
         field = np.copy(self.startField)
         for i in n:
             self.changeFieldMulti(field,changeHistory[i])
         return field
+    def HHistory(self,initH):
+        HHistory = [initH]
+        for n in range(1,len(self.deltaHHistory)+1):
+            HHistory.append(HHistory[n-1]+self.deltaHHistory[n-1])
+        return HHistory
+    def MHistory(self,initM):
+        MHistory = [initM]
+        for n in range(1,len(self.deltaMHistory)+1):
+            MHistory.append(MHistory[n-1]+self.deltaMHistory[n-1])
+        return MHistory
 
 if __name__ == '__main__':
     # Test if works
@@ -134,7 +144,7 @@ if __name__ == '__main__':
     f = createField(m.fieldSize,m.fieldInitMethod)
     m.init(f)
 #    m.showField()
-    #print calculateH(m.field,m.Hami[0],m.Hami[1])
+    print calculateH(m.field,m.Hami[0],m.Hami[1])
     M = [calculateM(m.field)]
     H = [calculateH(m.field,m.Hami[0],m.Hami[1])]
     Hh = H
@@ -146,10 +156,13 @@ if __name__ == '__main__':
         Hh.append(Hh[0]+sum(m.deltaHHistory))
         Mh.append(Mh[0]+sum(m.deltaMHistory))
     #print calculateH(m.field,m.Hami[0],m.Hami[1])
-    print H
+    #print H
+    print calculateH(m.field,m.Hami[0],m.Hami[1])
     print Hh
-    print M
-    print Mh
-    print H == Hh
-    print M ==Mh
+    #print M
+    #print Mh
+    print m.HHistory(H[0])
+    print m.deltaHHistory
+    print H == m.HHistory(H[0])
+    print M == m.MHistory(M[0])
     #m.showField()
