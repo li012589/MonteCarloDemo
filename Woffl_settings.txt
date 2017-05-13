@@ -1,0 +1,16 @@
+// Maxium threading
+thread = 2
+// Seed of the random function
+randomSeed = 'None'
+// Temperture (use [] if in range)
+temperture = 5
+// Size 
+size = [100,100]
+// Init method (-1 for random; others for homogeneous as specialized)
+init = -1
+// How many spins are fliped a time
+//flipTimes = 1
+// Maxium iterations
+maxIter = 100000
+// define the Hamiltonian (j,b)
+hamiltonian = [0.5,0.6]
