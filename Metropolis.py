@@ -135,8 +135,21 @@ if __name__ == '__main__':
     m.init(f)
 #    m.showField()
     #print calculateH(m.field,m.Hami[0],m.Hami[1])
-    print calculateM(m.field)
-    m.run(10)
+    M = [calculateM(m.field)]
+    H = [calculateH(m.field,m.Hami[0],m.Hami[1])]
+    Hh = H
+    Mh = M
+    for _ in range(10):
+        m.runOnce()
+        H.append(calculateH(m.field,m.Hami[0],m.Hami[1]))
+        M.append(calculateM(m.field))
+        Hh.append(Hh[0]+sum(m.deltaHHistory))
+        Mh.append(Mh[0]+sum(m.deltaMHistory))
     #print calculateH(m.field,m.Hami[0],m.Hami[1])
-    print calculateM(m.field)
+    print H
+    print Hh
+    print M
+    print Mh
+    print H == Hh
+    print M ==Mh
     #m.showField()
