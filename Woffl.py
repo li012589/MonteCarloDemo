@@ -112,10 +112,10 @@ class Woffl:
         deltaHj = 2*J*sumBoundary - 2*J*sumnBoundary
         #print deltaHb
         #print deltaHj
-        return (deltaHj + deltaHb)
+        self.deltaH = (deltaHj + deltaHb)
+        return self.deltaH
     def calculateDeltaM(self):
-        self.deltaM = 0.0
-        pass
+        self.deltaM = -2*self.totalChange*self.seed
         return self.deltaM
     def runOnce(self):
         self.createChange()
@@ -149,7 +149,10 @@ if __name__ == '__main__':
     w.init(f)
     print f
     print calculateH(w.field,w.Hami[0],w.Hami[1])
+    print calculateM(w.field)
     field = w.createChange()
     print w.calculateDeltaH()
+    print w.calculateDeltaM()
     print calculateH(field,w.Hami[0],w.Hami[1])
+    print calculateM(field)
     print field
