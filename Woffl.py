@@ -29,10 +29,12 @@ class Woffl:
         return self.field
     def createChange(self):
         self.changes = [(randint(0,self.fieldSize[0]-1),randint(0,self.fieldSize[1]-1))]
-        self.boundary = ()
+        self.boundary = set()
+        self.nboundary = set()
         self.seed = self.field[self.changes[0][0],self.changes[0][1]]
         #print self.changes[0]
         self.totalChange = 1
+        self.oldfield = np.copy(self.field)
         self.field[self.changes[0][0],self.changes[0][1]] = -self.seed
         while len(self.changes) >0:
             changes = self.changes.pop(0)
@@ -46,7 +48,9 @@ class Woffl:
                         self.field[i+1,j] = -self.seed
                         #print i+1,j
                     else:
-                        self.boundary += ((i+1,j),)
+                        self.boundary.add((i+1,j))
+                else:
+                    self.nboundary.add((i+1,j))
             if i-1 >= 0:
                 if self.field[(i-1,j)] == self.seed:
                     if random.random() <= self.P_add:
@@ -55,7 +59,9 @@ class Woffl:
                         self.field[i-1,j] = -self.seed
                         #print i-1,j
                     else:
-                        self.boundary += ((i-1,j),)
+                        self.boundary.add((i-1,j))
+                else:
+                    self.nboundary.add((i-1,j))
             if j+1 < self.fieldSize[1]:
                 if self.field[(i,j+1)] == self.seed:
                     if random.random() <= self.P_add:
@@ -64,7 +70,9 @@ class Woffl:
                         self.field[i,j+1] = -self.seed
                         #print i,j+1
                     else:
-                        self.boundary += ((i,j+1),)
+                        self.boundary.add((i,j+1))
+                else:
+                    self.nboundary.add((i,j+1))
             if j-1 >= 0:
                 if self.field[(i,j-1)] == self.seed:
                     if random.random() <= self.P_add:
@@ -73,7 +81,9 @@ class Woffl:
                         self.field[i,j-1] = -self.seed
                         #print i,j-1
                     else:
-                        self.boundary += ((i,j-1),)
+                        self.boundary.add((i,j-1))
+                else:
+                    self.nboundary.add((i,j-1))
         return self.field
     def changeField(self):
         pass
@@ -86,15 +96,22 @@ class Woffl:
         deltaHb = 0.0
         deltaHj = 0.0
         sumBoundary = 0
+        sumnBoundary = 0
+        print self.boundary
+        print self.nboundary
+        print self.totalChange
         for iterm in self.boundary:
             if self.field[iterm[0],iterm[1]] == self.seed:
-                pass
-            else:
                 sumBoundary += 1
+        for iterm in self.nboundary:
+            if self.oldfield[iterm[0],iterm[1]] != self.seed:
+                sumnBoundary += 1
+        print sumBoundary
+        print sumnBoundary
         deltaHb = -2*B*self.totalChange
         deltaHj = -2*J*sumBoundary
-        print deltaHb
-        print deltaHj
+        #print deltaHb
+        #print deltaHj
         return -(-deltaHj + deltaHb)
     def calculateDeltaM(self):
         self.deltaM = 0.0
@@ -136,6 +153,6 @@ if __name__ == '__main__':
     print f
     print calculateH(w.field,w.Hami[0],w.Hami[1])
     field = w.createChange()
-    #print w.calculateDeltaH()
+    w.calculateDeltaH()
     print calculateH(field,w.Hami[0],w.Hami[1])
     print field
