@@ -154,12 +154,25 @@ if __name__ == '__main__':
     w = Woffl('./Woffl_settings.txt')
     f = createField(w.fieldSize,w.fieldInitMethod)
     w.init(f)
-    print f
     print calculateH(w.field,w.Hami[0],w.Hami[1])
-    print calculateM(w.field)
-    w.runOnce()
-    print w.deltaH
-    print w.deltaM
+    M = [calculateM(w.field)]
+    H = [calculateH(w.field,w.Hami[0],w.Hami[1])]
+    Hh = H
+    Mh = M
+    for _ in range(3):
+        w.runOnce()
+        H.append(calculateH(w.field,w.Hami[0],w.Hami[1]))
+        M.append(calculateM(w.field))
+        Hh.append(Hh[0]+sum(w.deltaHHistory))
+        Mh.append(Mh[0]+sum(w.deltaMHistory))
+    #print calculateH(m.field,m.Hami[0],m.Hami[1])
+    #print H
     print calculateH(w.field,w.Hami[0],w.Hami[1])
-    print calculateM(w.field)
-    print w.field
+    print Hh
+    #print M
+    #print Mh
+    print w.HHistory(H[0])
+    print w.deltaHHistory
+    print H == w.HHistory(H[0])
+    print M == w.MHistory(M[0])
+    #m.showField()
