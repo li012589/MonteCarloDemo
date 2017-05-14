@@ -25,19 +25,58 @@ class Woffl:
     def init(self,field):
         self.field = np.copy(field)
         self.startField = np.copy(field)
+        self.P_add = 1-math.exp(-2*self.Hami[0]/self.t)
         return self.field
     def createChange(self):
-        pass
+        self.changes = [(randint(0,self.fieldSize[0]-1),randint(0,self.fieldSize[1]-1))]
+        self.boundary = ()
+        self.seed = self.field[self.changes[0][0],self.changes[0][1]]
+        #print self.changes[0]
+        self.totalChange = 1
+        self.field[self.changes[0][0],self.changes[0][1]] = -self.seed
+        while len(self.changes) >0:
+            changes = self.changes.pop(0)
+            i = changes[0]
+            j = changes[1]
+            if i+1 < self.fieldSize[0]:
+                if self.field[(i+1,j)] == self.seed:
+                    if random.random() <= self.P_add:
+                        self.changes.append((i+1,j))
+                        self.totalChange += 1
+                        self.field[i+1,j] = -self.seed
+                        #print i+1,j
+                    else:
+                        self.boundary += ((i+1,j),)
+            if i-1 >= 0:
+                if self.field[(i-1,j)] == self.seed:
+                    if random.random() <= self.P_add:
+                        self.changes.append((i-1,j))
+                        self.totalChange += 1
+                        self.field[i-1,j] = -self.seed
+                        #print i-1,j
+                    else:
+                        self.boundary += ((i-1,j),)
+            if j+1 < self.fieldSize[1]:
+                if self.field[(i,j+1)] == self.seed:
+                    if random.random() <= self.P_add:
+                        self.changes.append((i,j+1))
+                        self.totalChange += 1
+                        self.field[i,j+1] = -self.seed
+                        #print i,j+1
+                    else:
+                        self.boundary += ((i,j+1),)
+            if j-1 >= 0:
+                if self.field[(i,j-1)] == self.seed:
+                    if random.random() <= self.P_add:
+                        self.changes.append((i,j-1))
+                        self.totalChange += 1
+                        self.field[i,j-1] = -self.seed
+                        #print i,j-1
+                    else:
+                        self.boundary += ((i,j-1),)
+        return self.field
     def changeField(self):
-        self.newfield = self.changeFieldMulti(self.field,self.changes)
-        return self.newfield
-    def changeFieldMulti(self,field,changes):
-        newfield = np.copy(field)
-        for n in range(len(changes)):
-            i = changes[n][0]
-            j = changes[n][1]
-            newfield[i,j] = -newfield[i,j]
-        return newfield
+        pass
     def showField(self):
         plt.matshow(self.field)
         plt.show()
@@ -46,8 +85,17 @@ class Woffl:
         J = self.Hami[0]
         deltaHb = 0.0
         deltaHj = 0.0
-        shape = self.fieldSize
-        pass
+        sumBoundary = 0
+        for iterm in self.boundary:
+            if self.field[iterm[0],iterm[1]] == self.seed:
+                pass
+            else:
+                sumBoundary += 1
+        deltaHb = -2*B*self.totalChange
+        deltaHj = -2*J*sumBoundary
+        print deltaHb
+        print deltaHj
+        return -(-deltaHj + deltaHb)
     def calculateDeltaM(self):
         self.deltaM = 0.0
         for n in range(len(self.changes)):
@@ -64,7 +112,7 @@ class Woffl:
     def run(self,times):
         for _ in range(times):
             self.runOnce()
-     def fieldHistory(self,n):
+    def fieldHistory(self,n):
         field = np.copy(self.startField)
         for i in n:
             self.changeFieldMulti(field,changeHistory[i])
@@ -83,4 +131,11 @@ class Woffl:
 
 if __name__ == '__main__':
     w = Woffl('./Woffl_settings.txt')
-    f = createField(w.fieldSize,m.fieldInitMethod)
+    f = createField(w.fieldSize,w.fieldInitMethod)
+    w.init(f)
+    print f
+    print calculateH(w.field,w.Hami[0],w.Hami[1])
+    field = w.createChange()
+    #print w.calculateDeltaH()
+    print calculateH(field,w.Hami[0],w.Hami[1])
+    print field
