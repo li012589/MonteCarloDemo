@@ -26,6 +26,24 @@ class MetaMothod:
         self.field = np.copy(field)
         self.startField = np.copy(field)
         return field
+    def run(self,times):
+        for _ in range(times):
+            self.runOnce()
+    def fieldHistory(self,n):
+        field = np.copy(self.startField)
+        for i in n:
+            self.changeFieldMulti(field,changeHistory[i])
+        return field
+    def HHistory(self,initH):
+        HHistory = [initH]
+        for n in range(1,len(self.deltaHHistory)+1):
+            HHistory.append(HHistory[n-1]+self.deltaHHistory[n-1])
+        return HHistory
+    def MHistory(self,initM):
+        MHistory = [initM]
+        for n in range(1,len(self.deltaMHistory)+1):
+            MHistory.append(MHistory[n-1]+self.deltaMHistory[n-1])
+        return MHistory
 
 
 if __name__ == '__main__':
