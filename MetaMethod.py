@@ -15,17 +15,12 @@ class MetaMothod:
         self.Hami = self.settings.getValue('hamiltonian')
         self.maxIter = self.settings.getValue('maxIter')
         self.exponDeltaHList = exponDeltaH({})
-        self.flipTimes = self.settings.getValue('flipTimes')
         self.fieldInitMethod = self.settings.getValue('init')
         random.seed(self.settings.getValue('randomSeed'))
         self.applyFunc = {}
         self.changeHistory = []
         self.deltaHHistory = []
         self.deltaMHistory = []
-    def init(self,field):
-        self.field = np.copy(field)
-        self.startField = np.copy(field)
-        return field
     def run(self,times):
         for _ in range(times):
             self.runOnce()

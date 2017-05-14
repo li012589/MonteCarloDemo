@@ -15,7 +15,7 @@ class Metropolis:
         self.Hami = self.settings.getValue('hamiltonian')
         self.maxIter = self.settings.getValue('maxIter')
         self.exponDeltaHList = exponDeltaH({})
-        self.flipTimes = self.settings.getValue('flipTimes')
+        #self.flipTimes = self.settings.getValue('flipTimes')
         self.fieldInitMethod = self.settings.getValue('init')
         random.seed(self.settings.getValue('randomSeed'))
         self.applyFunc = {}
@@ -25,6 +25,7 @@ class Metropolis:
     def init(self,field):
         self.field = np.copy(field)
         self.startField = np.copy(field)
+        self.flipTimes = self.settings.getValue('flipTimes')
         return field
     def createChange(self):
         self.changes = []

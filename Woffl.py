@@ -171,8 +171,8 @@ if __name__ == '__main__':
     print Hh
     #print M
     #print Mh
-    print w.HHistory(H[0])
-    print w.deltaHHistory
+    print w.MHistory(H[0])
+    print w.deltaMHistory
     print H == w.HHistory(H[0])
     print M == w.MHistory(M[0])
     #m.showField()
