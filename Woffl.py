@@ -97,28 +97,25 @@ class Woffl:
         deltaHj = 0.0
         sumBoundary = 0
         sumnBoundary = 0
-        print self.boundary
-        print self.nboundary
-        print self.totalChange
+        #print self.boundary
+        #print self.nboundary
+        #print self.totalChange
         for iterm in self.boundary:
             if self.field[iterm[0],iterm[1]] == self.seed:
                 sumBoundary += 1
         for iterm in self.nboundary:
             if self.oldfield[iterm[0],iterm[1]] != self.seed:
                 sumnBoundary += 1
-        print sumBoundary
-        print sumnBoundary
-        deltaHb = -2*B*self.totalChange
-        deltaHj = -2*J*sumBoundary
+        #print sumBoundary
+        #print sumnBoundary
+        deltaHb = 2*B*self.totalChange*self.seed
+        deltaHj = 2*J*sumBoundary - 2*J*sumnBoundary
         #print deltaHb
         #print deltaHj
-        return -(-deltaHj + deltaHb)
+        return (deltaHj + deltaHb)
     def calculateDeltaM(self):
         self.deltaM = 0.0
-        for n in range(len(self.changes)):
-            i = self.changes[n][0]
-            j = self.changes[n][1]
-            self.deltaM += -2*self.field[i,j]
+        pass
         return self.deltaM
     def runOnce(self):
         self.createChange()
@@ -153,6 +150,6 @@ if __name__ == '__main__':
     print f
     print calculateH(w.field,w.Hami[0],w.Hami[1])
     field = w.createChange()
-    w.calculateDeltaH()
+    print w.calculateDeltaH()
     print calculateH(field,w.Hami[0],w.Hami[1])
     print field
