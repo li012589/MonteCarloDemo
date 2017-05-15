@@ -133,10 +133,14 @@ class Woffl:
         self.deltaMHistory.append(self.deltaM)
         return self.field
     def run(self,times):
-        initH = calculateH(self.field,self.Hami[0],self.Hami[1])
+        #self.M = [calculateM(self.field)]
+        #self.H = [calculateH(self.field,self.Hami[0],self.Hami[1])]
+        #initH = calculateH(self.field,self.Hami[0],self.Hami[1])
         #print "initH = "+ str(initH)
         for _ in range(times):
             self.runOnce()
+            #self.M.append(calculateM(self.field))
+            #self.H.append(calculateH(self.field,self.Hami[0],self.Hami[1]))
             #print "cal = "+ str(calculateH(self.field,self.Hami[0],self.Hami[1]))
             #print "delta = "+str((self.HHistory(initH))[-1])
             #print "delta2 = "+str(initH + np.sum(self.deltaH))
@@ -158,15 +162,30 @@ class Woffl:
 
 
 if __name__ == '__main__':
+    #test if work
     w = Woffl('./Woffl_settings.txt')
     f = createField(w.fieldSize,w.fieldInitMethod)
     w.init(f)
     initH = calculateH(w.field,w.Hami[0],w.Hami[1])
-    print initH
+    #print initH
     initM  =calculateM(w.field)
-    w.run(3)
+    w.run(1000)
     #w.runOnce()
-    print w.deltaHHistory
-    print w.HHistory(initH)
-    H = calculateH(w.field,w.Hami[0],w.Hami[1])
-    print H
+    #print w.deltaHHistory
+    #print w.HHistory(initH)
+    #H = calculateH(w.field,w.Hami[0],w.Hami[1])
+    #print H
+    a = w.MHistory(initM)
+    b =  w.M
+    aa = w.HHistory(initH)
+    bb = w.H
+    #print aa
+    #print bb
+    print a ==b
+    error = 0.0
+    for n in range(len(aa)):
+        error += aa[n] + bb[n]
+    if error >= 1:
+        print "false"
+    else:
+        print "true"
