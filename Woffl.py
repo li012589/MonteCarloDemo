@@ -44,7 +44,7 @@ class Woffl:
             if i+1 < self.fieldSize[0]:
                 if self.field[(i+1,j)] == self.seed:
                     if random.random() <= self.P_add:
-                        self.changes.append((i+1,j))
+                        self.tochanges.append((i+1,j))
                         self.totalChange += 1
                         self.field[i+1,j] = -self.seed
                         self.changes.append((i+1,j))
@@ -56,7 +56,7 @@ class Woffl:
             if i-1 >= 0:
                 if self.field[(i-1,j)] == self.seed:
                     if random.random() <= self.P_add:
-                        self.changes.append((i-1,j))
+                        self.tochanges.append((i-1,j))
                         self.totalChange += 1
                         self.field[i-1,j] = -self.seed
                         self.changes.append((i-1,j))
@@ -68,7 +68,7 @@ class Woffl:
             if j+1 < self.fieldSize[1]:
                 if self.field[(i,j+1)] == self.seed:
                     if random.random() <= self.P_add:
-                        self.changes.append((i,j+1))
+                        self.tochanges.append((i,j+1))
                         self.totalChange += 1
                         self.field[i,j+1] = -self.seed
                         self.changes.append((i,j+1))
@@ -80,7 +80,7 @@ class Woffl:
             if j-1 >= 0:
                 if self.field[(i,j-1)] == self.seed:
                     if random.random() <= self.P_add:
-                        self.changes.append((i,j-1))
+                        self.tochanges.append((i,j-1))
                         self.totalChange += 1
                         self.field[i,j-1] = -self.seed
                         self.changes.append((i,j-1))
@@ -123,16 +123,23 @@ class Woffl:
         self.deltaM = -2*self.totalChange*self.seed
         return self.deltaM
     def runOnce(self):
+        #print self.field
         self.createChange()
         self.calculateDeltaH()
         self.calculateDeltaM()
+        #print self.field
         self.changeHistory.append(self.changes)
         self.deltaHHistory.append(self.deltaH)
         self.deltaMHistory.append(self.deltaM)
         return self.field
     def run(self,times):
+        initH = calculateH(self.field,self.Hami[0],self.Hami[1])
+        #print "initH = "+ str(initH)
         for _ in range(times):
             self.runOnce()
+            #print "cal = "+ str(calculateH(self.field,self.Hami[0],self.Hami[1]))
+            #print "delta = "+str((self.HHistory(initH))[-1])
+            #print "delta2 = "+str(initH + np.sum(self.deltaH))
     def fieldHistory(self,n):
         field = np.copy(self.startField)
         for i in n:
@@ -154,25 +161,12 @@ if __name__ == '__main__':
     w = Woffl('./Woffl_settings.txt')
     f = createField(w.fieldSize,w.fieldInitMethod)
     w.init(f)
-    print calculateH(w.field,w.Hami[0],w.Hami[1])
-    M = [calculateM(w.field)]
-    H = [calculateH(w.field,w.Hami[0],w.Hami[1])]
-    Hh = H
-    Mh = M
-    for _ in range(3):
-        w.runOnce()
-        H.append(calculateH(w.field,w.Hami[0],w.Hami[1]))
-        M.append(calculateM(w.field))
-        Hh.append(Hh[0]+sum(w.deltaHHistory))
-        Mh.append(Mh[0]+sum(w.deltaMHistory))
-    #print calculateH(m.field,m.Hami[0],m.Hami[1])
-    #print H
-    print calculateH(w.field,w.Hami[0],w.Hami[1])
-    print Hh
-    #print M
-    #print Mh
-    print w.MHistory(H[0])
-    print w.deltaMHistory
-    print H == w.HHistory(H[0])
-    print M == w.MHistory(M[0])
-    #m.showField()
+    initH = calculateH(w.field,w.Hami[0],w.Hami[1])
+    print initH
+    initM  =calculateM(w.field)
+    w.run(3)
+    #w.runOnce()
+    print w.deltaHHistory
+    print w.HHistory(initH)
+    H = calculateH(w.field,w.Hami[0],w.Hami[1])
+    print H
