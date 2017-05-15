@@ -22,7 +22,13 @@ class Metropolis:
         self.changeHistory = []
         self.deltaHHistory = []
         self.deltaMHistory = []
-    def init(self,field):
+    def init_t(self,field):
+        self.field = np.copy(field)
+        self.startField = np.copy(field)
+        self.flipTimes = self.settings.getValue('flipTimes')
+        return field
+    def init(self,field,t):
+        self.t = t
         self.field = np.copy(field)
         self.startField = np.copy(field)
         self.flipTimes = self.settings.getValue('flipTimes')
